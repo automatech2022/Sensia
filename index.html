@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./ic_logo_sensia.png" type="image/x-icon">
+    <title>SENSIA - Acompañamiento Universitario Neurodivergente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Lexend', sans-serif; background-color: #f8fafc; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-gradient { background: linear-gradient(135deg, #7C4DFF 0%, #448AFF 100%); }
+    </style>
+</head>
+<body class="text-slate-800">
+
+<nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="./ic_logo_sensia.png" width="45" height="45" alt="Sensia" class="rounded-xl shadow-sm">
+            <span class="text-2xl font-bold tracking-tight text-purple-700">SENSIA</span>
+        </div>
+
+        <div class="hidden md:flex gap-8 font-medium">
+            <a href="#inicio" class="hover:text-purple-600 transition">Inicio</a>
+            <a href="#modulos" class="hover:text-purple-600 transition">Módulos</a>
+            <a href="#tecnologia" class="hover:text-purple-600 transition">Tecnología</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <a href="#descargar" class="hidden sm:block btn-gradient text-white px-6 py-2 rounded-full shadow-md font-semibold hover:scale-105 transition">Descargar</a>
+            
+            <button id="menu-btn" class="md:hidden text-purple-700 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full glass shadow-xl flex flex-col p-6 gap-4 font-medium md:hidden animate-fade-in">
+            <a href="#inicio" onclick="toggleMenu()" class="hover:text-purple-600 transition border-b border-purple-100 pb-2">Inicio</a>
+            <a href="#modulos" onclick="toggleMenu()" class="hover:text-purple-600 transition border-b border-purple-100 pb-2">Módulos</a>
+            <a href="#tecnologia" onclick="toggleMenu()" class="hover:text-purple-600 transition border-b border-purple-100 pb-2">Tecnología</a>
+            <a href="#descargar" onclick="toggleMenu()" class="sm:hidden btn-gradient text-white px-6 py-3 rounded-xl text-center shadow-md font-semibold">Descargar App</a>
+        </div>
+    </nav>
+
+    <section id="inicio" class="pt-32 pb-20 px-6 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+        <div class="md:w-1/2">
+            <span class="bg-purple-100 text-purple-700 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-widest">InnovaTec Project</span>
+            <h1 class="text-5xl md:text-6xl font-extrabold mt-4 leading-tight">Tu mente es única, <br><span class="text-purple-600">SENSIA</span> te acompaña.</h1>
+            <p class="text-lg text-slate-600 mt-6 leading-relaxed">El primer andamiaje cognitivo digital diseñado para estudiantes universitarios neurodivergentes. Reduce la ansiedad y potencia tu enfoque.</p>
+            
+            <div id="descargar" class="mt-10 flex flex-wrap gap-4">
+                <a href="/path-to-your-apk/sensia.apk" class="bg-slate-900 text-white px-8 py-3 rounded-2xl flex items-center gap-3 hover:bg-slate-800 transition shadow-xl">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.523 15.3414L20 12.8644L18.5858 11.4502L17.523 12.513V8H15.523V12.513L14.4602 11.4502L13.0459 12.8644L15.523 15.3414V15.3414C16.0753 15.8937 16.9707 15.8937 17.523 15.3414V15.3414Z"></path><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4Z"></path></svg>
+                    <span>Descargar APK</span>
+                </a>
+                <button onclick="openModal()" class="bg-white border-2 border-slate-200 px-8 py-3 rounded-2xl flex items-center gap-3 hover:border-purple-400 transition shadow-sm">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3.609 1.814L13.792 12 3.609 22.186c-.18.18-.344.094-.344-.131V1.945c0-.225.164-.311.344-.131zM14.535 12.743l2.843 2.843L5.617 21.463l8.918-8.72zm.743-.743L21.144 8.72l-2.022-1.164L15.278 12l3.844 4.444 2.022-1.164-5.866-3.28zM14.535 11.257l-8.918-8.72 11.761 5.877-2.843 2.843z"></path></svg>
+                    <span>Google Play</span>
+                </button>
+            </div>
+        </div>
+        <div class="md:w-1/2 relative">
+            <div class="w-64 h-64 bg-purple-200 rounded-full absolute -top-10 -left-10 blur-3xl opacity-50"></div>
+            <div class="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-2xl">
+                <div class="h-[32px] w-[3px] bg-gray-800 absolute -start-[17px] top-[72px] rounded-s-lg"></div>
+                <div class="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[124px] rounded-s-lg"></div>
+                <div class="h-[46px] w-[3px] bg-gray-800 absolute -start-[17px] top-[178px] rounded-s-lg"></div>
+                <div class="h-[64px] w-[3px] bg-gray-800 absolute -end-[17px] top-[142px] rounded-e-lg"></div>
+                <div class="rounded-[2rem] overflow-hidden w-[272px] h-[572px] bg-white">
+                    <div class="p-6">
+                        <div class="w-12 h-1 bg-slate-200 mx-auto mb-8"></div>
+                        <h3 class="font-bold text-xl">Hola, Osiel</h3>
+                        <div class="mt-4 p-4 bg-purple-50 rounded-xl">
+                            <p class="text-xs text-purple-600 font-bold">PRÓXIMA CLASE</p>
+                            <p class="text-sm font-medium">Sistemas Vibratorios</p>
+                        </div>
+                        <div class="mt-4 space-y-2">
+                            <div class="h-20 bg-slate-50 rounded-xl border border-slate-100 p-3">
+                                <div class="w-20 h-2 bg-slate-200 rounded mb-2"></div>
+                                <div class="w-full h-2 bg-slate-100 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="modulos" class="py-20 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Módulos Inteligentes</h2>
+                <p class="text-slate-500 mt-4">Diseñados para reducir la fatiga visual y la parálisis por análisis.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="p-8 rounded-[2rem] bg-purple-50 border border-purple-100 hover:shadow-xl transition duration-300">
+                    <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-white mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Onboarding</h3>
+                    <p class="text-sm text-slate-600 italic">RegistrationScreen</p>
+                    <p class="mt-4 text-slate-700">Identifica perfiles de TDAH, TEA o Dislexia para adaptar la interfaz automáticamente.</p>
+                </div>
+
+                <div class="p-8 rounded-[2rem] bg-blue-50 border border-blue-100 hover:shadow-xl transition duration-300">
+                    <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">HomeScreen</h3>
+                    <p class="text-sm text-slate-600 italic">Jerarquía Visual</p>
+                    <p class="mt-4 text-slate-700">Filtra tareas irrelevantes y muestra solo el "Próximo Paso" para evitar el agobio.</p>
+                </div>
+
+                <div class="p-8 rounded-[2rem] bg-orange-50 border border-orange-100 hover:shadow-xl transition duration-300">
+                    <div class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center text-white mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Rutinas</h3>
+                    <p class="text-sm text-slate-600 italic">RoutineScreen</p>
+                    <p class="mt-4 text-slate-700">Temporizadores Pomodoro dinámicos que rompen la parálisis por análisis académica.</p>
+                </div>
+
+                <div class="p-8 rounded-[2rem] bg-green-50 border border-green-100 hover:shadow-xl transition duration-300">
+                    <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center text-white mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Modo Lectura</h3>
+                    <p class="text-sm text-slate-600 italic">StudyScreen</p>
+                    <p class="mt-4 text-slate-700">Cambio dinámico de tipografía (isDyslexiaMode) y mapas mentales automáticos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tecnologia" class="py-20 px-6 bg-slate-50">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="md:w-1/3">
+                    <h2 class="text-3xl font-bold">Tecnología de Vanguardia</h2>
+                    <p class="mt-4 text-slate-600 leading-relaxed">SENSIA está construida sobre el ecosistema nativo de Android para garantizar que cada milisegundo de respuesta cuente.</p>
+                    <div class="mt-8 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            <span class="font-semibold text-slate-700">Arquitectura MVVM</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            <span class="font-semibold text-slate-700">Privacidad con Room DB</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-2/3 grid grid-cols-2 sm:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+                        <div class="text-purple-600 mb-2 font-bold">Kotlin</div>
+                        <p class="text-xs text-slate-500">Lenguaje 100% Nativo</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+                        <div class="text-purple-600 mb-2 font-bold">Jetpack Compose</div>
+                        <p class="text-xs text-slate-500">UI Declarativa</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+                        <div class="text-purple-600 mb-2 font-bold">Coroutines</div>
+                        <p class="text-xs text-slate-500">Asincronía Fluida</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+                        <div class="text-purple-600 mb-2 font-bold">Google TTS</div>
+                        <p class="text-xs text-slate-500">Accesibilidad por Voz</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+                        <div class="text-purple-600 mb-2 font-bold">Room</div>
+                        <p class="text-xs text-slate-500">Persistencia Local</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col items-center text-center">
+                        <div class="text-purple-600 mb-2 font-bold">Material 3</div>
+                        <p class="text-xs text-slate-500">Diseño Moderno</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="py-20 px-6 bg-white overflow-hidden">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-purple-600 font-bold tracking-widest uppercase text-sm">El Futuro de SENSIA</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2">Fase 2: Evolución Inteligente</h2>
+                <p class="text-slate-500 mt-4 max-w-2xl mx-auto">Nuestro roadmap está enfocado en convertir a SENSIA en un ecosistema proactivo que se anticipa a las necesidades del estudiante.</p>
+            </div>
+
+            <div class="relative">
+                <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-purple-100"></div>
+
+                <div class="space-y-12">
+                    <div class="relative flex flex-col md:flex-row items-center gap-8">
+                        <div class="md:w-1/2 md:text-right">
+                            <h3 class="text-xl font-bold text-purple-700">IA Predictiva: Claritze 2.0</h3>
+                            <p class="mt-2 text-slate-600">Implementación de modelos que analizan el nivel de estrés para sugerir pausas de respiración antes de un "meltdown".</p>
+                        </div>
+                        <div class="w-10 h-10 bg-purple-600 rounded-full border-4 border-white shadow-lg z-10 hidden md:block"></div>
+                        <div class="md:w-1/2"></div>
+                    </div>
+
+                    <div class="relative flex flex-col md:flex-row-reverse items-center gap-8">
+                        <div class="md:w-1/2 md:text-left">
+                            <h3 class="text-xl font-bold text-blue-600">Ecosistema Conectado</h3>
+                            <p class="mt-2 text-slate-600">Sincronización vía API con Canvas y Google Classroom para automatizar la carga de tareas y evitar el olvido manual.</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-500 rounded-full border-4 border-white shadow-lg z-10 hidden md:block"></div>
+                        <div class="md:w-1/2"></div>
+                    </div>
+
+                    <div class="relative flex flex-col md:flex-row items-center gap-8">
+                        <div class="md:w-1/2 md:text-right">
+                            <h3 class="text-xl font-bold text-green-600">Geocercas (Geofencing)</h3>
+                            <p class="mt-2 text-slate-600">Activación automática del modo "Enfoque" al detectar el ingreso al campus del Tec de Matamoros.</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-500 rounded-full border-4 border-white shadow-lg z-10 hidden md:block"></div>
+                        <div class="md:w-1/2"></div>
+                    </div>
+
+                    <div class="relative flex flex-col md:flex-row-reverse items-center gap-8">
+                        <div class="md:w-1/2 md:text-left">
+                            <h3 class="text-xl font-bold text-orange-500">Dopamina Saludable</h3>
+                            <p class="mt-2 text-slate-600">Sistema de recompensas visuales (plantas virtuales) por completar rutinas, reforzando hábitos sin generar ansiedad.</p>
+                        </div>
+                        <div class="w-10 h-10 bg-orange-400 rounded-full border-4 border-white shadow-lg z-10 hidden md:block"></div>
+                        <div class="md:w-1/2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="privacidad" class="py-16 px-6 bg-slate-900 text-white">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-10 items-center">
+                <div class="md:w-1/3">
+                    <div class="w-20 h-20 bg-purple-500/20 rounded-3xl flex items-center justify-center border border-purple-500/30">
+                        <svg class="w-10 h-10 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                </div>
+                <div class="md:w-2/3">
+                    <h2 class="text-2xl font-bold mb-4">Privacidad por Diseño</h2>
+                    <p class="text-slate-400 leading-relaxed">
+                        En SENSIA, entendemos que tu información es personal. Por ello, utilizamos **Room Database** para el almacenamiento local: tus datos de diagnóstico y rutinas permanecen en tu dispositivo, no en servidores externos. No comercializamos ni rastreamos tu actividad fuera de los fines académicos del proyecto.
+                    </p>
+                    <a href="docs/Politica_Privacidad_Sensia.pdf" class="mt-6 text-purple-400 hover:text-purple-300 font-medium underline">Leer Política Completa (PDF)</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 px-6 border-t border-slate-100 bg-slate-50 text-center">
+        <p class="text-slate-500 text-sm">© 2026 SENSIA Project - Desarrollado por el eqipo de Sensia para InnovaTec.</p>
+    </footer>
+
+    <div id="playStoreModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 px-4">
+        <div class="bg-white p-8 rounded-[2.5rem] max-w-md w-full shadow-2xl text-center transform scale-95 transition-transform">
+            <div class="w-20 h-20 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">¡Próximamente en Play Store!</h2>
+            <p class="text-slate-600 mb-6">Estamos finalizando los detalles para brindarte la mejor experiencia. Por ahora, puedes disfrutar de SENSIA descargando el APK directamente.</p>
+            <button onclick="closeModal()" class="w-full bg-purple-600 text-white py-3 rounded-2xl font-bold hover:bg-purple-700 transition">Entendido</button>
+        </div>
+    </div>
+
+    <div class="fixed bottom-8 right-8 flex flex-col gap-4 z-[100]">
+        <a href="https://github.com/tu-usuario" target="_blank" class="w-14 h-14 bg-white shadow-2xl rounded-full flex items-center justify-center hover:scale-110 transition border border-slate-100">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="mailto:osiel-rodriguez-ramirez@tuemail.com" class="w-14 h-14 bg-purple-600 text-white shadow-2xl rounded-full flex items-center justify-center hover:scale-110 hover:bg-purple-700 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        </a>
+    </div>
+
+    <script>
+        function openModal() { document.getElementById('playStoreModal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('playStoreModal').classList.add('hidden'); }
+
+        const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    function toggleMenu() {
+        mobileMenu.classList.toggle('hidden');
+        
+        // Cambiar icono entre hamburguesa y "X"
+        const isHidden = mobileMenu.classList.contains('hidden');
+        if (isHidden) {
+            menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        } else {
+            menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+        }
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+    </script>
+</body>
+</html>
