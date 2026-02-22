@@ -2,91 +2,71 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensia Web - Sincronización</title>
-    <script src="https://cdn.jsdelivr.net/npm/easy-qrcodejs@4.4.10/dist/easy.qrcode.min.js"></script>
+    <title>Sensia Web - Vincular</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root {
-            --sensia-primary: #7BA0A8;
-            --sensia-bg: #F8F9FA;
-            --sensia-text: #2D3436;
-        }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--sensia-bg); color: var(--sensia-text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; max-width: 450px; width: 90%; }
-        h1 { color: var(--sensia-primary); margin-bottom: 10px; font-size: 28px; }
-        #qrcode-container { margin: 25px auto; padding: 15px; background: white; border: 3px solid var(--sensia-primary); border-radius: 20px; display: inline-block; min-width: 200px; min-height: 200px; }
-        .status { font-size: 14px; color: #636e72; margin-top: 15px; font-weight: 500; }
-        .hidden { display: none; }
-        
-        /* Dashboard Estilo Sensia */
-        #dashboard { text-align: left; width: 95%; max-width: 900px; }
-        .section-title { border-bottom: 2px solid var(--sensia-primary); padding-bottom: 5px; margin-bottom: 15px; color: var(--sensia-primary); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { background: white; padding: 15px; border-radius: 12px; border-left: 6px solid var(--sensia-primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .emotion-badge { font-size: 24px; background: #eee; border-radius: 50%; padding: 10px; display: inline-block; }
+        :root { --sensia-primary: #7BA0A8; --sensia-bg: #F8F9FA; }
+        body { font-family: sans-serif; background: var(--sensia-bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 350px; }
+        h1 { color: var(--sensia-primary); }
+        #qrcode { margin: 20px auto; padding: 10px; border: 2px solid var(--sensia-primary); border-radius: 12px; display: inline-block; min-width: 200px; min-height: 200px; }
+        .error { color: #e74c3c; font-size: 12px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div id="login-container" class="container">
         <h1>Sensia Web</h1>
-        <p>Abre Sensia en tu celular, ve a Perfil y escanea para sincronizar tus datos.</p>
-        <div id="qrcode-container">
-            <div id="qrcode"></div>
-        </div>
-        <div class="status" id="status-text">Iniciando sesión segura...</div>
-    </div>
-
-    <div id="dashboard" class="container hidden">
-        <h1>Tu Ecosistema Sensia</h1>
-        <div class="grid">
-            <div>
-                <h3 class="section-title">📅 Tareas y Rutina</h3>
-                <div id="tasks-list"></div>
-            </div>
-            <div>
-                <h3 class="section-title">🧠 Diario Emocional</h3>
-                <div id="emotions-list"></div>
-            </div>
-        </div>
+        <p>Escanea para sincronizar</p>
+        <div id="qrcode"></div>
+        <div id="status" style="font-size: 14px; color: #666;">Iniciando...</div>
+        <div id="debug-error" class="error"></div>
     </div>
 
     <script>
-        const API_URL = "https://sensia-api.automatech2022.workers.dev"; //
+        // ASEGÚRATE QUE ESTA URL NO TENGA "/" AL FINAL
+        const API_URL = "https://sensia-api.automatech2022.workers.dev"; 
         const sessionToken = "SN-" + Math.random().toString(36).substr(2, 9).toUpperCase();
-        let checkInterval;
 
-        async function init() {
+        async function generateQR() {
+            const status = document.getElementById("status");
+            const debug = document.getElementById("debug-error");
+
             try {
-                // 1. Notificar al Worker de la nueva sesión
-                const res = await fetch(`${API_URL}/create-web-session`, {
+                status.innerText = "Registrando sesión en la nube...";
+                
+                // 1. Llamada al Worker
+                const response = await fetch(`${API_URL}/create-web-session`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token: sessionToken })
                 });
 
-                if (res.ok) {
-                    // 2. Generar QR con la librería actualizada
-                    new QRCode(document.getElementById("qrcode"), {
-                        text: sessionToken,
-                        width: 200,
-                        height: 200,
-                        colorDark: "#7BA0A8",
-                        colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.H
-                    });
+                if (!response.ok) throw new Error(`Error del servidor: ${response.status}`);
 
-                    document.getElementById("status-text").innerText = "¡Listo! Escanea el código con tu celular.";
-                    startPolling();
-                }
-            } catch (e) {
-                document.getElementById("status-text").innerText = "Error de conexión con el servidor.";
-                console.error(e);
+                // 2. Generar el QR
+                status.innerText = "Generando código...";
+                document.getElementById("qrcode").innerHTML = ""; // Limpiar
+                new QRCode(document.getElementById("qrcode"), {
+                    text: sessionToken,
+                    width: 200,
+                    height: 200,
+                    colorDark : "#7BA0A8",
+                    colorLight : "#ffffff"
+                });
+
+                status.innerText = "¡Listo! Escanea con tu app.";
+                startPolling();
+
+            } catch (err) {
+                status.innerText = "Error de conexión";
+                debug.innerText = err.message;
+                console.error("Error completo:", err);
             }
         }
 
         function startPolling() {
-            checkInterval = setInterval(async () => {
+            setInterval(async () => {
                 try {
                     const res = await fetch(`${API_URL}/check-session`, {
                         method: 'POST',
@@ -94,46 +74,15 @@
                         body: JSON.stringify({ token: sessionToken })
                     });
                     const data = await res.json();
-
                     if (data.status === 'authorized') {
-                        clearInterval(checkInterval);
-                        loadData(data.user_email);
+                        alert("¡Sesión autorizada para: " + data.user_email + "!");
+                        window.location.reload(); // Por ahora recargamos
                     }
-                } catch (e) { console.log("Buscando autorización..."); }
+                } catch (e) { /* Esperando... */ }
             }, 3000);
         }
 
-        async function loadData(email) {
-            document.getElementById("login-container").classList.add("hidden");
-            document.getElementById("dashboard").classList.remove("hidden");
-            
-            const res = await fetch(`${API_URL}/get-all`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email })
-            });
-            const data = await res.json();
-            
-            // Cargar Tareas
-            const taskList = document.getElementById("tasks-list");
-            data.tasks.slice(0, 5).forEach(t => {
-                taskList.innerHTML += `<div class="card"><strong>${t.title}</strong><br><small>${t.isCompleted ? '✅ Completada' : '⏳ Pendiente'}</small></div>`;
-            });
-
-            // Cargar Emociones
-            const emotionList = document.getElementById("emotions-list");
-            data.emotions.slice(0, 3).forEach(e => {
-                emotionList.innerHTML += `
-                    <div class="card">
-                        <span class="emotion-badge">${e.emotionEmoji}</span>
-                        <strong>${e.label}</strong>
-                        <p style="font-size: 12px; margin: 5px 0 0 0;">Nivel de estrés: ${Math.round(e.stressLevel * 100)}%</p>
-                    </div>`;
-            });
-        }
-
-        // Ejecutar al cargar la página
-        window.onload = init;
+        window.onload = generateQR;
     </script>
 </body>
 </html>
