@@ -2,111 +2,138 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sensia Web - Tu Espacio</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensia Web - Sincronización</title>
+    <script src="https://cdn.jsdelivr.net/npm/easy-qrcodejs@4.4.10/dist/easy.qrcode.min.js"></script>
     <style>
         :root {
             --sensia-primary: #7BA0A8;
             --sensia-bg: #F8F9FA;
             --sensia-text: #2D3436;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--sensia-bg); color: var(--sensia-text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 90%; }
-        h1 { color: var(--sensia-primary); margin-bottom: 10px; }
-        #qrcode { margin: 30px auto; padding: 10px; background: white; display: inline-block; border: 2px solid var(--sensia-primary); border-radius: 12px; }
-        .status { font-size: 14px; color: #636e72; margin-top: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--sensia-bg); color: var(--sensia-text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; max-width: 450px; width: 90%; }
+        h1 { color: var(--sensia-primary); margin-bottom: 10px; font-size: 28px; }
+        #qrcode-container { margin: 25px auto; padding: 15px; background: white; border: 3px solid var(--sensia-primary); border-radius: 20px; display: inline-block; min-width: 200px; min-height: 200px; }
+        .status { font-size: 14px; color: #636e72; margin-top: 15px; font-weight: 500; }
         .hidden { display: none; }
         
-        /* Estilos del Dashboard */
-        #dashboard { text-align: left; max-width: 800px; }
-        .card { background: white; padding: 20px; border-radius: 16px; margin-bottom: 15px; border-left: 5px solid var(--sensia-primary); }
+        /* Dashboard Estilo Sensia */
+        #dashboard { text-align: left; width: 95%; max-width: 900px; }
+        .section-title { border-bottom: 2px solid var(--sensia-primary); padding-bottom: 5px; margin-bottom: 15px; color: var(--sensia-primary); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; padding: 15px; border-radius: 12px; border-left: 6px solid var(--sensia-primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .emotion-badge { font-size: 24px; background: #eee; border-radius: 50%; padding: 10px; display: inline-block; }
     </style>
 </head>
 <body>
 
     <div id="login-container" class="container">
         <h1>Sensia Web</h1>
-        <p>Escanea el código con tu app para entrar</p>
-        <div id="qrcode"></div>
-        <div class="status" id="status-text">Generando sesión segura...</div>
+        <p>Abre Sensia en tu celular, ve a Perfil y escanea para sincronizar tus datos.</p>
+        <div id="qrcode-container">
+            <div id="qrcode"></div>
+        </div>
+        <div class="status" id="status-text">Iniciando sesión segura...</div>
     </div>
 
     <div id="dashboard" class="container hidden">
-        <h1>¡Hola de nuevo!</h1>
-        <div id="content">
-            <h3>Tus Tareas</h3>
-            <div id="tasks-list"></div>
+        <h1>Tu Ecosistema Sensia</h1>
+        <div class="grid">
+            <div>
+                <h3 class="section-title">📅 Tareas y Rutina</h3>
+                <div id="tasks-list"></div>
+            </div>
+            <div>
+                <h3 class="section-title">🧠 Diario Emocional</h3>
+                <div id="emotions-list"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://sensia-api.automatech2022.workers.dev"; // Tu URL de Cloudflare
-        const sessionToken = "SES-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+        const API_URL = "https://sensia-api.automatech2022.workers.dev"; //
+        const sessionToken = "SN-" + Math.random().toString(36).substr(2, 9).toUpperCase();
         let checkInterval;
 
-        // 1. Crear la sesión en el Worker
-        async function createSession() {
+        async function init() {
             try {
-                await fetch(`${API_URL}/create-web-session`, {
+                // 1. Notificar al Worker de la nueva sesión
+                const res = await fetch(`${API_URL}/create-web-session`, {
                     method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token: sessionToken })
                 });
-                
-                // Generar QR
-                new QRCode(document.getElementById("qrcode"), {
-                    text: sessionToken,
-                    width: 200,
-                    height: 200,
-                    colorDark : "#7BA0A8"
-                });
 
-                document.getElementById("status-text").innerText = "Esperando autorización desde el celular...";
-                startPolling();
+                if (res.ok) {
+                    // 2. Generar QR con la librería actualizada
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: sessionToken,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#7BA0A8",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+
+                    document.getElementById("status-text").innerText = "¡Listo! Escanea el código con tu celular.";
+                    startPolling();
+                }
             } catch (e) {
-                console.error("Error al crear sesión", e);
+                document.getElementById("status-text").innerText = "Error de conexión con el servidor.";
+                console.error(e);
             }
         }
 
-        // 2. Preguntar al Worker si ya se autorizó
         function startPolling() {
             checkInterval = setInterval(async () => {
                 try {
-                    // Nota: Necesitas crear un endpoint en el worker que verifique el status de web_sessions
                     const res = await fetch(`${API_URL}/check-session`, {
                         method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ token: sessionToken })
                     });
                     const data = await res.json();
 
                     if (data.status === 'authorized') {
                         clearInterval(checkInterval);
-                        loadDashboard(data.user_email);
+                        loadData(data.user_email);
                     }
-                } catch (e) { console.log("Esperando..."); }
+                } catch (e) { console.log("Buscando autorización..."); }
             }, 3000);
         }
 
-        // 3. Cargar datos del usuario
-        async function loadDashboard(email) {
+        async function loadData(email) {
             document.getElementById("login-container").classList.add("hidden");
             document.getElementById("dashboard").classList.remove("hidden");
             
             const res = await fetch(`${API_URL}/get-all`, {
                 method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email })
             });
             const data = await res.json();
             
-            const list = document.getElementById("tasks-list");
-            data.tasks.forEach(task => {
-                const item = document.createElement("div");
-                item.className = "card";
-                item.innerHTML = `<strong>${task.title}</strong><br><small>${task.isForToday ? 'Para hoy' : 'Semana'}</small>`;
-                list.appendChild(item);
+            // Cargar Tareas
+            const taskList = document.getElementById("tasks-list");
+            data.tasks.slice(0, 5).forEach(t => {
+                taskList.innerHTML += `<div class="card"><strong>${t.title}</strong><br><small>${t.isCompleted ? '✅ Completada' : '⏳ Pendiente'}</small></div>`;
+            });
+
+            // Cargar Emociones
+            const emotionList = document.getElementById("emotions-list");
+            data.emotions.slice(0, 3).forEach(e => {
+                emotionList.innerHTML += `
+                    <div class="card">
+                        <span class="emotion-badge">${e.emotionEmoji}</span>
+                        <strong>${e.label}</strong>
+                        <p style="font-size: 12px; margin: 5px 0 0 0;">Nivel de estrés: ${Math.round(e.stressLevel * 100)}%</p>
+                    </div>`;
             });
         }
 
-        createSession();
+        // Ejecutar al cargar la página
+        window.onload = init;
     </script>
 </body>
 </html>
