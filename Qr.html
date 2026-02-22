@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sensia Web - Tu Espacio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --sensia-primary: #7BA0A8;
+            --sensia-bg: #F8F9FA;
+            --sensia-text: #2D3436;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--sensia-bg); color: var(--sensia-text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 90%; }
+        h1 { color: var(--sensia-primary); margin-bottom: 10px; }
+        #qrcode { margin: 30px auto; padding: 10px; background: white; display: inline-block; border: 2px solid var(--sensia-primary); border-radius: 12px; }
+        .status { font-size: 14px; color: #636e72; margin-top: 20px; }
+        .hidden { display: none; }
+        
+        /* Estilos del Dashboard */
+        #dashboard { text-align: left; max-width: 800px; }
+        .card { background: white; padding: 20px; border-radius: 16px; margin-bottom: 15px; border-left: 5px solid var(--sensia-primary); }
+    </style>
+</head>
+<body>
+
+    <div id="login-container" class="container">
+        <h1>Sensia Web</h1>
+        <p>Escanea el código con tu app para entrar</p>
+        <div id="qrcode"></div>
+        <div class="status" id="status-text">Generando sesión segura...</div>
+    </div>
+
+    <div id="dashboard" class="container hidden">
+        <h1>¡Hola de nuevo!</h1>
+        <div id="content">
+            <h3>Tus Tareas</h3>
+            <div id="tasks-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://sensia-api.automatech2022.workers.dev"; // Tu URL de Cloudflare
+        const sessionToken = "SES-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+        let checkInterval;
+
+        // 1. Crear la sesión en el Worker
+        async function createSession() {
+            try {
+                await fetch(`${API_URL}/create-web-session`, {
+                    method: 'POST',
+                    body: JSON.stringify({ token: sessionToken })
+                });
+                
+                // Generar QR
+                new QRCode(document.getElementById("qrcode"), {
+                    text: sessionToken,
+                    width: 200,
+                    height: 200,
+                    colorDark : "#7BA0A8"
+                });
+
+                document.getElementById("status-text").innerText = "Esperando autorización desde el celular...";
+                startPolling();
+            } catch (e) {
+                console.error("Error al crear sesión", e);
+            }
+        }
+
+        // 2. Preguntar al Worker si ya se autorizó
+        function startPolling() {
+            checkInterval = setInterval(async () => {
+                try {
+                    // Nota: Necesitas crear un endpoint en el worker que verifique el status de web_sessions
+                    const res = await fetch(`${API_URL}/check-session`, {
+                        method: 'POST',
+                        body: JSON.stringify({ token: sessionToken })
+                    });
+                    const data = await res.json();
+
+                    if (data.status === 'authorized') {
+                        clearInterval(checkInterval);
+                        loadDashboard(data.user_email);
+                    }
+                } catch (e) { console.log("Esperando..."); }
+            }, 3000);
+        }
+
+        // 3. Cargar datos del usuario
+        async function loadDashboard(email) {
+            document.getElementById("login-container").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+            
+            const res = await fetch(`${API_URL}/get-all`, {
+                method: 'POST',
+                body: JSON.stringify({ email: email })
+            });
+            const data = await res.json();
+            
+            const list = document.getElementById("tasks-list");
+            data.tasks.forEach(task => {
+                const item = document.createElement("div");
+                item.className = "card";
+                item.innerHTML = `<strong>${task.title}</strong><br><small>${task.isForToday ? 'Para hoy' : 'Semana'}</small>`;
+                list.appendChild(item);
+            });
+        }
+
+        createSession();
+    </script>
+</body>
+</html>
