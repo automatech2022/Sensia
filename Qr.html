@@ -2,20 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sensia Web - Dashboard</title>
+    <title>Sensia Web - Gestión Total</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root { --sensia-primary: #7BA0A8; --sensia-secondary: #A8C5C1; --sensia-bg: #F0F4F4; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--sensia-bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background: white; padding: 30px; border-radius: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); width: 100%; max-width: 1000px; }
-        h1, h2 { color: var(--sensia-primary); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .card { background: #fff; border-radius: 16px; padding: 15px; border-left: 6px solid var(--sensia-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 10px; }
-        .emoji-badge { font-size: 24px; margin-right: 10px; }
-        .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; background: var(--sensia-secondary); color: white; margin-top: 5px; }
-        #login-view { text-align: center; padding: 50px; }
-        #qrcode { margin: 20px auto; display: inline-block; padding: 10px; border: 2px solid var(--sensia-primary); border-radius: 12px; }
+        :root { --sensia-primary: #7BA0A8; --sensia-secondary: #A8C5C1; --sensia-bg: #F0F4F4; --sensia-success: #4CAF50; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--sensia-bg); margin: 0; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); width: 95%; max-width: 1200px; margin: auto; }
+        h1, h2 { color: var(--sensia-primary); border-bottom: 2px solid #eee; padding-bottom: 8px; }
+        
+        /* Layout de 3 Columnas */
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 20px; }
+        
+        .card { background: #fff; border-radius: 16px; padding: 15px; border-left: 6px solid var(--sensia-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 12px; transition: 0.3s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
+        
+        /* Estilos de Tareas */
+        .task-row { display: flex; align-items: center; justify-content: space-between; }
+        .btn-check { cursor: pointer; background: none; border: 2px solid var(--sensia-primary); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-check.done { background: var(--sensia-success); border-color: var(--sensia-success); color: white; }
+        .task-text.done { text-decoration: line-through; color: #999; }
+
+        .emoji-badge { font-size: 24px; margin-right: 10px; background: #f9f9f9; padding: 8px; border-radius: 50%; }
         .hidden { display: none; }
+        #login-view { text-align: center; padding: 60px; }
+        #qrcode { margin: 25px auto; padding: 15px; border: 3px solid var(--sensia-primary); border-radius: 20px; display: inline-block; }
     </style>
 </head>
 <body>
@@ -23,24 +33,31 @@
     <div class="container">
         <div id="login-view">
             <h1>Sensia Web</h1>
-            <p>Escanea para sincronizar tu ecosistema</p>
+            <p>Escanea el código con tu celular para vincular tu cuenta</p>
             <div id="qrcode"></div>
-            <p id="status">Generando sesión...</p>
+            <p id="status" style="font-weight: bold; color: var(--sensia-primary);">Iniciando servidor...</p>
         </div>
 
         <div id="main-view" class="hidden">
-            <h1>Mi Ecosistema Sensia</h1>
-            <p id="user-welcome" style="font-weight: bold; color: #666;"></p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>Ecosistema Sensia</h1>
+                <button onclick="location.reload()" style="background: var(--sensia-primary); color: white; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer;">Actualizar</button>
+            </div>
+            <p id="user-email" style="color: #666; margin-top: -10px;"></p>
             
-            <div class="grid">
-                <div class="column">
+            <div class="grid-3">
+                <div>
                     <h2>📋 Tareas</h2>
                     <div id="tasks-container"></div>
                 </div>
 
-                <div class="column">
-                    <h2>🌿 Bienestar y Materias</h2>
+                <div>
+                    <h2>🌿 Bienestar</h2>
                     <div id="emotions-container"></div>
+                </div>
+
+                <div>
+                    <h2>📚 Estudio</h2>
                     <div id="subjects-container"></div>
                 </div>
             </div>
@@ -49,22 +66,25 @@
 
     <script>
         const API_URL = "https://sensia-api.automatech2022.workers.dev";
-        const sessionToken = "SN-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+        const sessionToken = "WEB-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+        let currentData = null;
+        let currentUserEmail = "";
 
         async function init() {
-            const res = await fetch(`${API_URL}/create-web-session`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ token: sessionToken })
-            });
-
-            if (res.ok) {
-                new QRCode(document.getElementById("qrcode"), {
-                    text: sessionToken, width: 200, height: 200, colorDark : "#7BA0A8"
+            try {
+                const res = await fetch(`${API_URL}/create-web-session`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ token: sessionToken })
                 });
-                document.getElementById("status").innerText = "¡Listo! Escanea con tu app.";
-                startPolling();
-            }
+                if (res.ok) {
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: sessionToken, width: 220, height: 220, colorDark : "#7BA0A8"
+                    });
+                    document.getElementById("status").innerText = "¡Esperando escaneo!";
+                    startPolling();
+                }
+            } catch (e) { document.getElementById("status").innerText = "Error de conexión"; }
         }
 
         function startPolling() {
@@ -75,43 +95,79 @@
                     body: JSON.stringify({ token: sessionToken })
                 });
                 const data = await res.json();
-
                 if (data.status === 'authorized') {
                     clearInterval(interval);
-                    renderDashboard(data.user_email);
+                    currentUserEmail = data.user_email;
+                    renderDashboard();
                 }
             }, 3000);
         }
 
-        async function renderDashboard(email) {
+        async function renderDashboard() {
             document.getElementById("login-view").classList.add("hidden");
             document.getElementById("main-view").classList.remove("hidden");
-            document.getElementById("user-welcome").innerText = "Sesión activa: " + email;
+            document.getElementById("user-email").innerText = "Usuario: " + currentUserEmail;
 
             const res = await fetch(`${API_URL}/get-all`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ email: email })
+                body: JSON.stringify({ email: currentUserEmail })
             });
-            const data = await res.json();
+            currentData = await res.json();
 
-            // Renderizar Tareas
+            // 1. Render Tareas con botón de completar
             const tasksDiv = document.getElementById("tasks-container");
-            data.tasks?.forEach(t => {
-                tasksDiv.innerHTML += `<div class="card"><strong>${t.title}</strong><br><span class="tag">${t.isForToday ? 'Hoy' : 'Semana'}</span></div>`;
+            tasksDiv.innerHTML = "";
+            currentData.tasks?.forEach((t, index) => {
+                tasksDiv.innerHTML += `
+                    <div class="card task-row">
+                        <span class="task-text ${t.isCompleted ? 'done' : ''}">${t.title}</span>
+                        <button class="btn-check ${t.isCompleted ? 'done' : ''}" onclick="toggleTask(${index})">
+                            ${t.isCompleted ? '✓' : ''}
+                        </button>
+                    </div>`;
             });
 
-            // Renderizar Emociones
+            // 2. Render Emociones
             const emotionsDiv = document.getElementById("emotions-container");
-            data.emotions?.slice(0, 3).forEach(e => {
-                emotionsDiv.innerHTML += `<div class="card"><span class="emoji-badge">${e.emotionEmoji}</span><strong>${e.label}</strong><br><small>Estrés: ${Math.round(e.stressLevel * 100)}%</small></div>`;
+            emotionsDiv.innerHTML = "";
+            currentData.emotions?.slice(0, 5).forEach(e => {
+                emotionsDiv.innerHTML += `
+                    <div class="card">
+                        <span class="emoji-badge">${e.emotionEmoji}</span>
+                        <strong>${e.label}</strong>
+                        <div style="font-size: 12px; margin-top: 8px; color: #777;">Estrés: ${Math.round(e.stressLevel * 100)}%</div>
+                    </div>`;
             });
 
-            // Renderizar Materias
+            // 3. Render Materias
             const subjectsDiv = document.getElementById("subjects-container");
-            data.subjects?.forEach(s => {
-                subjectsDiv.innerHTML += `<div class="card" style="border-left-color: #7BA0A8"><strong>📚 ${s.name}</strong></div>`;
+            subjectsDiv.innerHTML = "";
+            currentData.subjects?.forEach(s => {
+                subjectsDiv.innerHTML += `<div class="card"><strong>📘 ${s.name}</strong></div>`;
             });
+        }
+
+        async function toggleTask(index) {
+            // Cambio local
+            currentData.tasks[index].isCompleted = !currentData.tasks[index].isCompleted;
+            
+            // Sincronizar con la nube
+            try {
+                await fetch(`${API_URL}/sync-all`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: currentUserEmail,
+                        tasks: currentData.tasks,
+                        subjects: currentData.subjects,
+                        topics: currentData.topics,
+                        emotions: currentData.emotions,
+                        preferences: currentData.preferences
+                    })
+                });
+                renderDashboard(); // Refrescar vista
+            } catch (e) { alert("Error al sincronizar"); }
         }
 
         window.onload = init;
