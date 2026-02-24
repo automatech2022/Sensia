@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./ic_logo_sensia.png" type="image/x-icon">
+    <title>Nosotros - SENSIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Lexend', sans-serif; background-color: #f8fafc; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    </style>
+</head>
+<body class="text-slate-800">
+    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="./ic_logo_sensia.png" width="45" height="45" alt="Sensia" class="rounded-xl shadow-sm">
+            <span class="text-2xl font-bold tracking-tight text-purple-700">SENSIA</span>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold text-purple-700 mb-8">¿Quiénes somos?</h1>
+        <div class="prose prose-lg text-slate-600 space-y-6">
+            <p>Somos un equipo del <strong>Instituto Tecnológico de Matamoros</strong> dedicado a cerrar la brecha entre las capacidades intelectuales y las demandas ejecutivas en la universidad.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h4 class="font-bold text-slate-900 mb-2">Andamiaje Cognitivo</h4>
+                    <p class="text-sm">Compensamos dificultades en planificación y memoria de trabajo mediante código especializado.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h4 class="font-bold text-slate-900 mb-2">Bienestar Emocional</h4>
+                    <p class="text-sm">Integramos la regulación emocional no como un extra, sino como una herramienta de productividad.</p>
+                </div>
+            </div>
+        </div>
+        <a href="index.html" class="mt-10 inline-block text-purple-600 font-bold hover:underline">← Volver al inicio</a>
+    </main>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('hamburger-icon');
+            const isHidden = menu.classList.toggle('hidden');
+            icon.innerHTML = isHidden ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>' : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+        }
+    </script>
+</body>
+</html>

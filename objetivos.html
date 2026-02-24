@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./ic_logo_sensia.png" type="image/x-icon">
+    <title>Objetivos - SENSIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Lexend', sans-serif; background-color: #f8fafc; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-gradient { background: linear-gradient(135deg, #7C4DFF 0%, #448AFF 100%); }
+    </style>
+</head>
+<body class="text-slate-800">
+    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="./ic_logo_sensia.png" width="45" height="45" alt="Sensia" class="rounded-xl shadow-sm">
+            <span class="text-2xl font-bold tracking-tight text-purple-700">SENSIA</span>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold mb-12 text-slate-900">Nuestros Objetivos</h1>
+        
+        <div class="grid gap-6">
+            <div class="p-6 md:p-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
+                <h3 class="font-bold text-xl text-purple-700 mb-4">Inclusión Académica Real</h3>
+                <p class="text-slate-600">Reducir el aislamiento y la sobrecarga sensorial, factores clave en la deserción escolar.</p>
+            </div>
+
+            <div class="p-6 md:p-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
+                <h3 class="font-bold text-xl text-blue-600">Soberanía de Datos</h3>
+                <p class="text-slate-600">Uso estricto de Room Database para que la privacidad sea un derecho técnico.</p>
+            </div>
+
+            <div class="p-6 md:p-8 bg-white rounded-3xl border border-slate-100 shadow-sm">
+                <h3 class="font-bold text-xl text-green-600">Gamificación No Estresante</h3>
+                <p class="text-slate-600">Reforzar hábitos saludables y dopamina mediante recompensas visuales finitas.</p>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center">
+            <a href="index.html" class="text-purple-600 font-bold hover:underline flex items-center justify-center gap-2">
+                <span>←</span> Volver al inicio
+            </a>
+        </div>
+    </main>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('hamburger-icon');
+            const isHidden = menu.classList.toggle('hidden');
+            if (!isHidden) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+            }
+        }
+    </script>
+</body>
+</html>

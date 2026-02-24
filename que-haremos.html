@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./ic_logo_sensia.png" type="image/x-icon">
+    <title>¿Qué haremos? - SENSIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Lexend', sans-serif; background-color: #f8fafc; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-gradient { background: linear-gradient(135deg, #7C4DFF 0%, #448AFF 100%); }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="text-slate-800">
+    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="./ic_logo_sensia.png" width="45" height="45" alt="Sensia" class="rounded-xl shadow-sm">
+            <span class="text-2xl font-bold tracking-tight text-purple-700">SENSIA</span>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">¿Qué haremos?</h1>
+        <p class="text-lg text-slate-600 mb-12 leading-relaxed">Nuestra ruta de trabajo para transformar la experiencia educativa neurodivergente(TDAH, TEA Nivel 1 y , Dislexia).</p>
+
+        <div class="space-y-12">
+            <div class="flex gap-4 md:gap-6 relative">
+                <div class="absolute h-full w-0.5 bg-purple-100 left-5 md:left-6 top-10"></div>
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-purple-600 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold z-10 text-sm md:text-base">1</div>
+                <div>
+                    <h3 class="text-lg md:text-xl font-bold text-purple-700">Consolidación Técnica</h3>
+                    <p class="text-slate-600 mt-2 text-sm md:text-base">Optimización del código en <strong>Kotlin y Jetpack Compose</strong> para garantizar un andamiaje cognitivo fluido.</p>
+                </div>
+            </div>
+
+            <div class="flex gap-4 md:gap-6 relative">
+                <div class="absolute h-full w-0.5 bg-purple-100 left-5 md:left-6 top-10"></div>
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-purple-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold z-10 text-sm md:text-base">2</div>
+                <div>
+                    <h3 class="text-lg md:text-xl font-bold text-purple-600">Integración de Claritze AI 2.0</h3>
+                    <p class="text-slate-600 mt-2 text-sm md:text-base">Uso de inteligencia artificial para analizar estrés y prevenir colapsos sensoriales.</p>
+                </div>
+            </div>
+
+            <div class="flex gap-4 md:gap-6">
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold z-10 text-sm md:text-base">3</div>
+                <div>
+                    <h3 class="text-lg md:text-xl font-bold text-blue-600">Automatización y Geofencing</h3>
+                    <p class="text-slate-600 mt-2 text-sm md:text-base">Sincronización académica y activación de modo enfoque por ubicación en el campus.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-16 text-center md:text-left">
+            <a href="index.html" class="text-purple-600 font-bold hover:underline inline-flex items-center gap-2">
+                <span>←</span> Volver al inicio
+            </a>
+        </div>
+    </main>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('hamburger-icon');
+            const isHidden = menu.classList.toggle('hidden');
+            if (!isHidden) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+            }
+        }
+    </script>
+</body>
+</html>
